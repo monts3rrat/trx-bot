@@ -1,0 +1,30 @@
+{
+    "groups": [
+        {
+            "id": "group_1",
+            "name": "Основная группа",
+            "wallets": [
+                {
+                    "address": "TRXMainAddress123",
+                    "private_key_enc": "encrypted_data_here",
+                    "is_main": true,
+                    "balance": 100.0
+                },
+                {
+                    "address": "TRXWallet2",
+                    "private_key_enc": "encrypted_data_here",
+                    "is_main": false,
+                    "balance": 50.0
+                }
+            ],
+            "status": "active",
+            "method": "random",
+            "main_percent": 30
+        }
+    ],
+    "statistics": {
+        "total_transactions": 42,
+        "total_usdt": 1250.75,
+        "total_trx": 15.20
+    }
+}
