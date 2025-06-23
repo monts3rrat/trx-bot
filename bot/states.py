@@ -1,5 +1,4 @@
-# bot\states.py
-
+# bot/states.py
 from aiogram.fsm.state import State, StatesGroup
 
 class AuthState(StatesGroup):
@@ -8,13 +7,10 @@ class AuthState(StatesGroup):
 class GroupState(StatesGroup):
     creating_name = State()
     creating_wallets = State()
-    adding_wallet = State()
-    editing = State()
 
 class WarmupState(StatesGroup):
     selecting_group = State()
     selecting_method = State()
-    settings = State()
 
 class SettingsState(StatesGroup):
     main_menu = State()

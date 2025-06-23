@@ -1,52 +1,51 @@
-# bot\security.py
-
+# bot/security.py
 import base64
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+
 from bot.config import config
-from aiogram.fsm.context import FSMContext
+
+AUTHORIZED_USERS = set()
 
 class SecurityManager:
+
+    @staticmethod
+    def authorize_user(user_id: int):
+        AUTHORIZED_USERS.add(user_id)
+
     @staticmethod
     def is_authorized_user(user_id: int) -> bool:
-        return user_id == config.ADMIN_TELEGRAM_ID
-    
+        return user_id in AUTHORIZED_USERS
+
     @staticmethod
     def check_pin(pin: str) -> bool:
         return pin == config.PIN_CODE
-    
+
     @staticmethod
     def encrypt_data(data: str) -> str:
         key = config.AES_KEY.encode()
-        salt = b'salt_'  # Используем фиксированную соль для упрощения
+        salt = b"fixed_salt__"
         kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,
             salt=salt,
-            iterations=100000,
+            iterations=100_000,
         )
-        key_derived = base64.urlsafe_b64encode(kdf.derive(key))
-        f = Fernet(key_derived)
-        encrypted_data = f.encrypt(data.encode())
-        return encrypted_data.decode()
-    
+        token_key = base64.urlsafe_b64encode(kdf.derive(key))
+        f = Fernet(token_key)
+        return f.encrypt(data.encode()).decode()
+
     @staticmethod
-    def decrypt_data(encrypted_data: str) -> str:
+    def decrypt_data(token: str) -> str:
         key = config.AES_KEY.encode()
-        salt = b'salt_'
+        salt = b"fixed_salt__"
         kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,
             salt=salt,
-            iterations=100000,
+            iterations=100_000,
         )
-        key_derived = base64.urlsafe_b64encode(kdf.derive(key))
-        f = Fernet(key_derived)
-        decrypted_data = f.decrypt(encrypted_data.encode())
-        return decrypted_data.decode()
-    
-    @staticmethod
-    async def check_auth(message, state: FSMContext) -> bool:
-        data = await state.get_data()
-        return data.get("authenticated", False)
+        token_key = base64.urlsafe_b64encode(kdf.derive(key))
+        f = Fernet(token_key)
+        return f.decrypt(token.encode()).decode()

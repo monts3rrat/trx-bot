@@ -1,7 +1,6 @@
 # bot\config.py
 import os
 from dotenv import load_dotenv
-
 load_dotenv()
 
 class Config:
@@ -11,5 +10,6 @@ class Config:
     MAX_PIN_ATTEMPTS = int(os.getenv("MAX_PIN_ATTEMPTS"))
     AES_KEY = os.getenv("AES_KEY")
     DATA_FILE = "data/dummy_data.json"
+    TRONGRID_API_KEY = os.getenv("TRONGRID_API_KEY")
 
 config = Config()

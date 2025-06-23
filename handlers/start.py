@@ -1,6 +1,5 @@
-# handlers\start.py
-
-from aiogram import Router, F
+# handlers/start.py
+from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
@@ -14,11 +13,10 @@ router = Router()
 @router.message(Command("start"))
 async def cmd_start(message: Message, state: FSMContext):
     if not SecurityManager.is_authorized_user(message.from_user.id):
-        await message.answer("⚠️ Доступ запрещен!")
-        return
-    
-    await state.set_state(AuthState.waiting_pin)
-    await message.answer("🔐 Введите PIN-код:")
+        await state.set_state(AuthState.waiting_pin)
+        await message.answer("🔐 Введите PIN‑код:")
+    else:
+        await message.answer("✅ Вы уже авторизованы", reply_markup=main_menu_kb())
 
 @router.message(AuthState.waiting_pin)
 async def process_pin(message: Message, state: FSMContext):
@@ -26,13 +24,12 @@ async def process_pin(message: Message, state: FSMContext):
     attempts = user_data.get("pin_attempts", 0) + 1
 
     if SecurityManager.check_pin(message.text):
-        await state.update_data(authenticated=True, pin_attempts=0)
-        await state.set_state(None)
-        await message.answer("✅ Доступ разрешен!", reply_markup=main_menu_kb())
-    elif attempts >= 3:
-        await message.answer("🚫 Превышено количество попыток! Бот заблокирован.")
+        SecurityManager.authorize_user(message.from_user.id)
+        await state.clear()
+        await message.answer("✅ Доступ разрешён", reply_markup=main_menu_kb())
+    elif attempts >= SecurityManager.MAX_PIN_ATTEMPTS:
+        await message.answer("🚫 Блокировка! Превышено число попыток.")
         await state.clear()
     else:
         await state.update_data(pin_attempts=attempts)
-        remaining = 3 - attempts
-        await message.answer(f"❌ Неверный PIN! Осталось попыток: {remaining}")
+        await message.answer(f"❌ Неверный PIN. Осталось {SecurityManager.MAX_PIN_ATTEMPTS - attempts} попыток.")
