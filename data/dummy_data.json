@@ -8,29 +8,42 @@
           "address": "TLTMP4DohcFvUJ77JyRf1MduWcC7xCbAKz",
           "private_key_enc": "gAAAAABoWYj0cr9ZWFo4C2-pixNz81HLqAaulwNPPA7wBjNxs6qHx5mD-H5dNIdnKMv95u6W3f_2vsv2NHQdzUD1aI2ddjOhnEY2iYOrG_JaxsmBBlHXPMfKq-p9y32F1IHAbYFhaus1fEWcuXXOIF2GrYcql29Xv6eACFaWIqTlDLYt9bGlVjc=",
           "is_main": true,
-          "balance": 0.0
+          "balance": 0.001998949755
         },
         {
           "address": "TXDBwiccoZePCx6KLijdR6jjUPXFnmJJDT",
           "private_key_enc": "gAAAAABoWYj6MlYH7iOIeemDRN2ZV6ugEL2sAOswsm_95YPa1cp-FHRLv_-AMn-d4-TnVuhyGgP3LmkDTCXCwExZxti3aTPhcWv3K3FdWp3Qc_YPxqNTCj7HEk8bX3P1LWDCsZz9gtfAhK0fYd62Zm3Usn3bDezMeDjAdLfqNKHlomcTI2mxp50=",
           "is_main": false,
-          "balance": 0.0
+          "balance": 7.42992e-07
         },
         {
           "address": "TSm5uzr4SEpA4rxMpWV9zMicWYkcqBURg1",
           "private_key_enc": "gAAAAABoWYkDRiuOt-EPSlHcuiKwX0S16Qubaikk0-Dw21cEJBfzla__JaTHYXQVEXk4H7kyO9L48kzYXmJn_pygcCgsh7OKaAvFTwQL_e3LL0l_NxhnJR05ZwjiszgMkMtG3XH9bTeVFwWJGYXD8OzGstTHnOz1ALMrIimW1TYePwM8MssRZJ4=",
           "is_main": false,
-          "balance": 0.0
+          "balance": 0.001995988253
         }
       ],
       "status": "active",
       "method": "random",
-      "main_percent": 30
+      "main_percent": 30,
+      "daily_trx_limit": 10,
+      "trx_interval_min": 1,
+      "trx_interval_max": 2,
+      "statistics": {
+        "total_transactions": 13,
+        "total_usdt": 0.0,
+        "total_trx": 2.66,
+        "positive_tx": 0,
+        "negative_tx": 13
+      },
+      "daily_trx_count": 1,
+      "daily_trx_date": "2025-06-24"
     }
   ],
+  "history": [],
   "statistics": {
-    "total_transactions": 0,
+    "total_transactions": 13,
     "total_usdt": 0.0,
-    "total_trx": 0.0
+    "total_trx": 2.66
   }
 }
