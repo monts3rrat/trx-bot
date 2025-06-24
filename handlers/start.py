@@ -27,7 +27,7 @@ async def process_pin(message: Message, state: FSMContext):
         SecurityManager.authorize_user(message.from_user.id)
         await state.clear()
         await message.answer("✅ Доступ разрешён", reply_markup=main_menu_kb())
-    elif attempts >= SecurityManager.MAX_PIN_ATTEMPTS:
+    elif attempts >= 3:
         await message.answer("🚫 Блокировка! Превышено число попыток.")
         await state.clear()
     else:

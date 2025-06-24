@@ -10,11 +10,13 @@ def load_dummy_data() -> dict:
     if not os.path.exists(config.DATA_FILE):
         return {
             "groups": [],
+            "favorites": [],
             "history": [],
             "statistics": {"total_transactions": 0, "total_usdt": 0.0, "total_trx": 0.0}
         }
     with open(config.DATA_FILE, "r", encoding="utf-8") as f:
         data = json.load(f)
+    data.setdefault("favorites", [])
     data.setdefault("history", [])
     data.setdefault("statistics", {"total_transactions": 0, "total_usdt": 0.0, "total_trx": 0.0})
     for grp in data.get("groups", []):
@@ -22,17 +24,25 @@ def load_dummy_data() -> dict:
         grp.setdefault("status", "active")
         grp.setdefault("method", "random")
         grp.setdefault("main_percent", 30)
-
         grp.setdefault("daily_trx_limit", 10)
-        grp.setdefault("trx_interval_min", 1)   
-        grp.setdefault("trx_interval_max", 2)  
-        grp.setdefault("statistics", {"total_transactions": 0, "total_usdt": 0.0, "total_trx": 0.0})
+        grp.setdefault("trx_interval_min", 1)
+        grp.setdefault("trx_interval_max", 2)
+        grp.setdefault("daily_trx_count", 0)
+        grp.setdefault("daily_trx_date", str(date.today()))
+        grp.setdefault("statistics", {
+            "total_transactions": 0,
+            "total_usdt": 0.0,
+            "total_trx": 0.0,
+            "positive_tx": 0,
+            "negative_tx": 0
+        })
     return data
 
 def save_dummy_data(data: dict):
     os.makedirs(os.path.dirname(config.DATA_FILE), exist_ok=True)
     with open(config.DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
+
 
 def get_group_by_id(group_id: str) -> dict | None:
     for grp in load_dummy_data().get("groups", []):
@@ -76,8 +86,9 @@ def update_wallet_balances(group_id: str) -> list[dict]:
         if grp["id"] == group_id:
             for w in grp["wallets"]:
                 try:
-                    sun = tron.get_account_balance(w["address"])
-                    w["balance"] = float(sun) / 1_000_000
+                    acct = tron.get_account(w["address"])
+                    sun_balance = acct.get("balance", 0)
+                    w["balance"] = sun_balance / 1_000_000
                 except Exception:
                     pass
             data["groups"][i] = grp

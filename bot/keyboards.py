@@ -6,7 +6,7 @@ def main_menu_kb():
     b = InlineKeyboardBuilder()
     b.row(
         InlineKeyboardButton(text="📁 Группы", callback_data="groups"),
-        InlineKeyboardButton(text="📊 Статистика", callback_data="stats"),
+        InlineKeyboardButton(text="📊 Статистика", callback_data="stats")
     )
     b.row(
         InlineKeyboardButton(text="🔁 Прогрев", callback_data="warmup")
@@ -40,13 +40,16 @@ def groups_list_kb():
     return b.as_markup()
 
 def group_actions_kb(group_id: str, status: str):
+    from bot.keyboards import back_to_main_kb  # avoid circular import in stats handler
     b = InlineKeyboardBuilder()
-    # добавляем кнопку прогрева и локальной статистики
     b.row(
         InlineKeyboardButton(text="🔁 Прогрев",    callback_data=f"warmup_{group_id}"),
         InlineKeyboardButton(text="📊 Статистика", callback_data=f"stats_{group_id}")
     )
-    b.row(InlineKeyboardButton(text="✏️ Изменить лимит", callback_data=f"limit_{group_id}"))
+    b.row(
+        InlineKeyboardButton(text="✏️ Изменить лимит", callback_data=f"limit_{group_id}"),
+        InlineKeyboardButton(text="💳 Пополнить",       callback_data=f"topup_{group_id}")
+    )
     if status == "active":
         b.row(InlineKeyboardButton(text="⏸️ Пауза", callback_data=f"pause_{group_id}"))
     else:
@@ -66,7 +69,7 @@ def warmup_methods_kb(group_id: str):
     b.row(InlineKeyboardButton(text="🎲 Рандом",      callback_data=f"method_random_{group_id}"))
     b.row(InlineKeyboardButton(text="🔄 Круговой",    callback_data=f"method_circle_{group_id}"))
     b.row(InlineKeyboardButton(text="⭐ MAIN‑цепочка", callback_data=f"method_main_{group_id}"))
-    b.row(InlineKeyboardButton(text="💧 TRX‑only",     callback_data=f"method_trx_{group_id}"))
+    b.row(InlineKeyboardButton(text="💧 TRX‑only",    callback_data=f"method_trx_{group_id}"))
     b.row(InlineKeyboardButton(text="🔙 Назад",       callback_data="warmup"))
     return b.as_markup()
 
